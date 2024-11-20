@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/OrakelVonBaden/OrakelVonBaden.iml" filepath="$PROJECT_DIR$/OrakelVonBaden/OrakelVonBaden.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/abbts-dtc.iml" filepath="$PROJECT_DIR$/.idea/abbts-dtc.iml" />
     </modules>
   </component>
