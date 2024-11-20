@@ -1,5 +1,13 @@
 import java.util.Scanner
 
+/**
+ * Das bekannte Spiel Schere-Stein-Papier zwischen einem
+ * Spieler und dem Computer.
+ *
+ * Autor: Andreas Wassmer
+ * Version: 20241115
+ */
+
 fun main() {
     val scanner = Scanner(System.`in`)
     val options = listOf("s", "t", "p")

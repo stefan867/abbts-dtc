@@ -1,5 +1,13 @@
 import kotlin.random.Random
 
+/**
+ * Gibt beim Start einen Sinnspruch , ein Glückssymbol und eine Glückszahl
+ * aus.
+ *
+ * Autor: Andreas Wassmer
+ * Version: 20241120
+ */
+
 // Die Sprüche des Tages
 val spells = listOf("Nutze den Tag.", "Heute ist ein toller Tag.")
 
