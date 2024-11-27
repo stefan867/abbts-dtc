@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/OrakelVonBaden/OrakelVonBaden.iml" filepath="$PROJECT_DIR$/OrakelVonBaden/OrakelVonBaden.iml" />
-      <module fileurl="file://$PROJECT_DIR$/RollTheDice/RollTheDice.iml" filepath="$PROJECT_DIR$/RollTheDice/RollTheDice.iml" />
-      <module fileurl="file://$PROJECT_DIR$/SchereSteinPapier/SchereSteinPapier.iml" filepath="$PROJECT_DIR$/SchereSteinPapier/SchereSteinPapier.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ThemaGit/OrakelVonBaden/OrakelVonBaden.iml" filepath="$PROJECT_DIR$/ThemaGit/OrakelVonBaden/OrakelVonBaden.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ThemaGit/RollTheDice/RollTheDice.iml" filepath="$PROJECT_DIR$/ThemaGit/RollTheDice/RollTheDice.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ThemaGit/SchereSteinPapier/SchereSteinPapier.iml" filepath="$PROJECT_DIR$/ThemaGit/SchereSteinPapier/SchereSteinPapier.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/abbts-dtc.iml" filepath="$PROJECT_DIR$/.idea/abbts-dtc.iml" />
     </modules>
   </component>
