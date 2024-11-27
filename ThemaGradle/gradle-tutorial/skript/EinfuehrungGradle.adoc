@@ -1,6 +1,6 @@
 = Erste Schritte mit Gradle
 Andreas Wassmer <andreas.wassmer@doz.abbts.ch>
-14. Dez. 2023
+27. Nov. 2024
 :toc: auto
 :toc-title: Inhalt
 :icons: font
@@ -25,26 +25,27 @@ https://github.com/anawas/gradle-tutorial.git
 == Installation
 
 === Voraussetzungen
-Wenn Sie die neusten Versionen von Kotlin ab Version 1.8 verwenden wollen, müssen Sie mindestens Gradle Version 8.0 installieren. Die sehr populäre Gradle-Version 7.6 funktioniert nur bis zur Kotlin-Version 1.4.
+Wenn Sie die neusten Versionen von Kotlin ab Version 1.9 verwenden wollen, müssen Sie mindestens Gradle Version 8.5 installieren. Die sehr populäre Gradle-Version 7.6 funktioniert nur bis zur Kotlin-Version 1.4.
 
 === Installation
 Auf der Gradle-Projektwebseite finden Sie die Installationsanleitungen für alle gängigen Systeme. Folgen Sie den Anweisungen auf der Webseite https://docs.gradle.org/current/userguide/installation.html
 
-Testen Sie wie in der Installationsanleitung angegeben ob die Installation geklappt hat mit dem Befehl `+gradle -v+`. Auf meinem Apple-Rechner erhalte ich die folgende Ausgabe. Sie zeigt, dass Gradle richtig installiert wurde.
+Testen Sie wie in der Installationsanleitung angegeben ob die Installation geklappt hat mit dem Befehl `+gradle -v+`. Auf meinem Rechner erhalte ich die folgende Ausgabe. Sie zeigt, dass Gradle richtig installiert wurde.
 
 ----
 ------------------------------------------------------------
-Gradle 8.4
+Gradle 8.11.1
 ------------------------------------------------------------
 
-Build time:   2023-10-04 20:52:13 UTC
-Revision:     e9251e572c9bd1d01e503a0dfdf43aedaeecdc3f
+Build time:    2024-11-20 16:56:46 UTC
+Revision:      481cb05a490e0ef9f8620f7873b83bd8a72e7c39
 
-Kotlin:       1.9.10
-Groovy:       3.0.17
-Ant:          Apache Ant(TM) version 1.10.13 compiled on January 4 2023
-JVM:          21.0.1 (Eclipse Adoptium 21.0.1+12-LTS)
-OS:           Mac OS X 14.2 aarch64
+Kotlin:        2.0.20
+Groovy:        3.0.22
+Ant:           Apache Ant(TM) version 1.10.14 compiled on August 16 2023
+Launcher JVM:  17.0.13 (Amazon.com Inc. 17.0.13+11-LTS)
+Daemon JVM:    C:\Users\menka\.jdks\corretto-17.0.13 (no JDK specified, using current Java home)
+OS:            Windows 11 10.0 amd64
 ----
 
 
@@ -128,7 +129,7 @@ BUILD SUCCESSFUL in 400ms
 === Tasks
 Mit der Ausführung von `+./gradlew build+` (Windows `+./gradlew.bat build+`) haben Sie einen sogenannten Task von Gradle ausgeführt. Tasks sind Anweisungen an Gradle, etwas Bestimmtes zu tun. Hier zum Beispiel das komplette Projekt zu erstellen. Da wir noch nicht definiert haben, dass wir ein Kotlin-Projekt erstellen wollen, wird natürlich auch keines erstellt. Trotzdem wird durch `+build+` eine Default-Anweisung ausgeführt. Diese werden wir später dann für unsere Zwecke anpassen.
 
-Im Basisprojekt sind bereits einige Aufgaben (Tasks) definiert, welche von Gradel ausgeführt werden können.
+Im Basisprojekt sind bereits einige Aufgaben (Tasks) definiert, welche von Gradle ausgeführt werden können.
 Welche das sind, können Sie mit dem Befehl `+gradle tasks+` anzeigen lassen.
 
 ----
@@ -190,6 +191,7 @@ Sie erinnern sich: wir wollen Gradle einsetzen, um ein Kotlin-Projekt zu erstell
 4. Wenn wir externe Bibliotheken verwenden wollen, z.B. JavaFX, müssen wir diese ebenfalls dem Projekt hinzufügen
 5. Da wir unseren Code auch testen wollen, müssen wir definieren, welches Framework wir verwenden wollen und wo die Testdateien zu finden sind
 6. Schlussendlich müssen wir die Sourcedateien in Klassen kompilieren und alles in eine Jar-Datei packen.
+7. Damit wir die Jar-Datei auch ohne die IDE ausführen können, müssen wir über das Manifest angeben, wo die Main-Funktion zu finden ist.
 
 Gradle bietet zu diesem Zweck sogenannte *Plugins* an. Diese können Sie sich vorstellen wie kleine Unterprogramme, welche bestimmte Aufgaben übernehmen. Solche Aufgaben können zum Beispiel das Aufführen von Tests sein oder das Kompilieren von Code. Es sei hier nur erwähnt, dass Sie solche Plugins auch selber schreiben können. Damit lassen sich auch komplexeste Aufgaben mit Gradle lösen.
 
@@ -197,10 +199,10 @@ Um ein Kotlin-Projekt zu erstellen, verwenden wir das Plugin `+kotlin+`. Dazu ö
 
 ----
 plugins {
-    kotlin("jvm").version("1.9.20")
+    kotlin("jvm").version("2.0.20")
 }
 ----
-Dies konfiguriert das Plugin so, dass der Code für die JVM erstellt wird und Kotlin 1.9.20 verwendet wird. Sollten Sie eine andere Version installiert haben, so müssen Sie diese entsprechend angeben.
+Dies konfiguriert das Plugin so, dass der Code für die JVM erstellt wird und Kotlin in der zur Zeit aktuellen Version 2.0.20 verwendet wird. Sollten Sie eine andere Version installiert haben, so müssen Sie diese entsprechend angeben.
 
 *Aufgabe*
 Durch das Hinzufügen des Kotlin-Plugins sind neue Tasks hinzugekommen. Finden Sie heraus, welche es sind.
@@ -212,10 +214,7 @@ repositories {
 }
 ----
 
-An dieser Stelle sollten wir uns um den Code kümmern. Das Plugin für Kotlin erwartet den Code an einer bestimmten Stelle, nämlich im Verzeichnis `+src/main/kotlin+`. Das ist eine Konvention, welche sich unter den Java- und Kotlinentwicklern durchgesetzt hat. Wenn wir unsere Sourcedateien dort ablegen, müssen wir nicht konfigurieren ("convention over configuration"); das Plugin findet sie und kompiliert sie. Als legen wir als nächstes dieses Verzeichnis an. Dort, wo unsere Build-Datei liegt, schreiben wir
-----
-mkdir -p src/main/kotlin
-----
+An dieser Stelle sollten wir uns um den Code kümmern. Das Plugin für Kotlin erwartet den Code an einer bestimmten Stelle, nämlich im Verzeichnis `+src/main/kotlin+`. Das ist eine Konvention, welche sich unter den Java- und Kotlinentwicklern durchgesetzt hat. Wenn wir unsere Sourcedateien dort ablegen, müssen wir nicht konfigurieren ("convention over configuration"); das Plugin findet sie und kompiliert sie. Als legen wir als nächstes dieses Verzeichnis an. Im gleichen Ordner wo unsere Build-Datei liegt, erzeugen Sie einen neuen Ordner inklusive Unterordner mit den Namen `+src/main/kotlin+`.
 Wir wechseln in das Verzeichnis und legen dort die Datei `+Main.kt+` an. Das geht am besten über das IDE. Den Inhalt halten wir bewusst einfach:
 ----
 fun main() {
@@ -282,6 +281,10 @@ build
 
 Warten Sie noch mit dem Ausführen der Jar-Datei. Sie wird so nicht funktionieren. Wenn Sie sie starten mit
 ----
+java -jar build/libs/gradle-start.jar
+----
+oder auch mit
+----
 kotlin build/libs/gradle-start.jar
 ----
 wird der Fehler erscheinen
@@ -293,17 +296,27 @@ Dies liegt daran, dass die JVM nicht weiss, was Sie ausführen soll. Es fehlt di
 ----
 tasks.withType<Jar> {
     manifest {
-        attributes["Main-Class"] = "ch.abbts.ndsswe.MainKt"
+        attributes("Main-Class" to "MainKt")
     }
 }
 ----
+
+Wenn wir in unserem Code packages verwenden, müssen wir den Namen der Main-Klasse anpassen. Haben wir die Main-Funktion unserer Kotlin-App zum Beispiel im Package `ch.abbts.swends` abgelegt, so lauten die Zeilen wie folgt:
+----
+tasks.withType<Jar> {
+    manifest {
+        attributes("Main-Class" to "ch.abbts.swends.MainKt")
+    }
+}
+----
+
 
 === Das vollständige Skript
 Die Datei `+build.gradle.kts+` sollte nun wie folgt aussehen.
 ----
 
 plugins {
-    kotlin("jvm").version("1.9.20")
+    kotlin("jvm").version("2.0.20")
 }
 
 repositories {
@@ -312,9 +325,10 @@ repositories {
 
 tasks.withType<Jar> {
     manifest {
-        attributes["Main-Class"] = "MainKt"
+        attributes("Main-Class" to "MainKt")
     }
 }
+
 ----
 
 Wir löschen das Verzeichnis `+build+` und erstellen das Projekt neu. Wir können das auf einer Zeile erledigen:
@@ -326,10 +340,10 @@ Der Task `+clean+` löscht das gesamte Build-Verzeichnis bevor es mit `+build+` 
 
 Nun lässt sich unser Programm starten:
 ----
-kotlin build/libs/gradle-start.jar
+java -jar build/libs/gradle-start.jar
 ----
 
-Auf dem Bildschirm sollte nun die Zeilen erscheinen
+Auf dem Bildschirm sollte nun die Zeile erscheinen
 ----
 Hallo Gradle!
 ----
@@ -345,7 +359,7 @@ In der Eingabeaufforderung erscheint die Ausgabe
 META-INF/
 META-INF/MANIFEST.MF
 META-INF/gradle-start.kotlin_module
-MainKt.class
+MainKt.class  <-- Das ist die angegebene Main-Klasse
 ----
 
 == Erstellen einer Applikation
