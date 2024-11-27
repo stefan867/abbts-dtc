@@ -1,0 +1,476 @@
+= Erste Schritte mit Gradle
+Andreas Wassmer <andreas.wassmer@doz.abbts.ch>
+14. Dez. 2023
+:toc: auto
+:toc-title: Inhalt
+:icons: font
+
+Dieses Dokument wurde mit AsciiDoc erstellt.Damit lassen sich einfach und schnell Dokumentation erstellen.AsciiDoc basiert Markdown, einer Beschreibungssprache für Textdokumente.Formatierungen werden durch Markierungen erzeugt.Zum Beispiel führt `+*fett*+` zur Darstellung *fett*.
+
+== Was ist Gradle
+Gradle ist ein Build Management Tool, das für den Bau, die Konfiguration und das Management von Projekten verwendet wird.Es unterstützt eine Vielzahl von Programmiersprachen, darunter Java, Groovy, Kotlin, Scala und mehr, was es zu einer vielseitigen Lösung für unterschiedliche Projektanforderungen macht.Gradle gibt es für Windows, macOS und praktisch alle Linux-Distributionen.
+
+Gradle basiert auf einer DSL (Domain Specific Language) für die Projektdefinition, die es Entwicklern ermöglicht, den *Build-Prozess* in einer leicht verständlichen, strukturierten Syntax zu beschreiben. Zur Zeit sin diese beiden Sprachen Groovy und Kotlin.
+
+Für Entwickler besonders wichtig ist die *Dependency Management-Funktion*. Sie erleichtert das Verwalten von Abhängigkeiten, indem es automatisch Bibliotheken und Module aus Remote-Repositories herunterlädt und in das Projekt integriert. Auch ist es einfach möglich sogenannte *Multi-Projekt-Builds* zu erstellen, welche beim Entwicklen von komplexen Webapplikationen oft auftreten. Gradle ermöglicht es, komplexe Projekte mit vielen Untereinheiten effizient zu verwalten.
+
+Zudem lässt sich Gradle durch Plugins im Funktionsumfang erweitern. Eine breite Palette von Plugins steht zur Verfügung, um gängige Aufgaben wie das Testen, Dokumentieren und Bereitstellen zu automatisieren.
+
+=== Hinweis
+Dieser Text dient als roter Faden im Unterricht. Er behandelt das Thema nicht vollständig. Ich habe mich darauf beschränkt, das Wesentliche herauszuarbeiten, so dass ein Grundverständnis für die Funktionweise von Gradle ensteht. Vertieftes Wissen kann man sich mit verschiedenen Büchern zum Thema aneignen. Auch die Webseite des Projektes enthält ein ausführliches Tutorial, allerdings nur auf Englisch. Der Link darauf lautet: https://docs.gradle.org/current/userguide/userguide.html
+
+Der Text mit dem Sourcecode kann von meinem GitHub-Account heruntergeladen werden:
+https://github.com/anawas/gradle-tutorial.git
+
+== Installation
+
+=== Voraussetzungen
+Wenn Sie die neusten Versionen von Kotlin ab Version 1.8 verwenden wollen, müssen Sie mindestens Gradle Version 8.0 installieren. Die sehr populäre Gradle-Version 7.6 funktioniert nur bis zur Kotlin-Version 1.4.
+
+=== Installation
+Auf der Gradle-Projektwebseite finden Sie die Installationsanleitungen für alle gängigen Systeme. Folgen Sie den Anweisungen auf der Webseite https://docs.gradle.org/current/userguide/installation.html
+
+Testen Sie wie in der Installationsanleitung angegeben ob die Installation geklappt hat mit dem Befehl `+gradle -v+`. Auf meinem Apple-Rechner erhalte ich die folgende Ausgabe. Sie zeigt, dass Gradle richtig installiert wurde.
+
+----
+------------------------------------------------------------
+Gradle 8.4
+------------------------------------------------------------
+
+Build time:   2023-10-04 20:52:13 UTC
+Revision:     e9251e572c9bd1d01e503a0dfdf43aedaeecdc3f
+
+Kotlin:       1.9.10
+Groovy:       3.0.17
+Ant:          Apache Ant(TM) version 1.10.13 compiled on January 4 2023
+JVM:          21.0.1 (Eclipse Adoptium 21.0.1+12-LTS)
+OS:           Mac OS X 14.2 aarch64
+----
+
+
+== Ein erstes einfaches Projekt
+Nachdem Sie Gradle installiert haben, sind Sie nun bereit, ein erstes Kotlin-Projekt zu erstellen. Gradle wird ein paar Dateien und Verzeichnisse erzeugen. Daher empfehle ich Ihnen, die folgenden Schritte in einem neuen Projektordner zu machen. Es ist generell eine gute Idee, für jedes Projekt ein eigenes Verzeichnis anzulegen.
+
+Erstellen Sie also den Projektorder `+gradle-starter-basic+`. Wechseln Sie dann in diesen und geben Sie über die Kommandozeile folgenden Befehl ein:
+[source]
+----
+gradle init
+----
+
+Sie sehen nun eine Anzahl Fragen, die Sie wie nachfolgend gezeigt beantworten.
+----
+Select type of project to generate:
+  1: basic
+  2: application
+  3: library
+  4: Gradle plugin
+Enter selection (default: basic) [1..4] 1
+
+Select build script DSL:
+  1: Kotlin
+  2: Groovy
+Enter selection (default: Kotlin) [1..2] 1
+
+Project name (default: gradle-starter-basic):
+Generate build using new APIs and behavior (some features may change in the next minor release)? (default: no) [yes, no] no
+
+> Task :init
+To learn more about Gradle by exploring our Samples at https://docs.gradle.org/8.4/samples
+
+BUILD SUCCESSFUL in 10s
+2 actionable tasks: 2 executed
+----
+
+Gradle hat bereits ein paar Dateien und Verzeichnisse erstellt, welche für das Funktionieren unerlässlich sind.
+----
+.
+├── build.gradle.kts  <-- 1
+├── gradle
+│   └── wrapper
+│       ├── gradle-wrapper.jar
+│       └── gradle-wrapper.properties
+├── gradlew  <-- 3a
+├── gradlew.bat  <-- 3b
+└── settings.gradle.kts  <-- 2
+
+3 directories, 6 files
+----
+Die beiden mit 1 und 2 bezeichneten Dateien sind für uns wichtig. In der Datei `+build.gradle.kts+` wird der Build konfiguiriert. Hier geben wir an, welche Sprache wir kompilieren, welche Abhängigkeiten wir benötigen und auch von welcher Form die Ausgabe ist. Für Java und Kotlin wird das meistens ein Jar-File sein. Für Webapplikationen nach dem Java2EE-Standard können dies aber auch War- oder Ear-Dateien sein.
+
+Die Datei `+settings.grade.kts+` wird vor allem benötigt, wenn das Projekt aus Unterprojekten besteht. Eine Webapp in Java besteht beipielsweise aus einem Projekt für das Backend und einem für die Kommunikation mit der Datenbank. In diesen Fällen werden die Projekte in dieser Datei aufgeführt, damit Gradle diese ebenfalls erstellen kann.
+
+Die beiden Dateien 3a und 3b sind Skriptdateien für den Wrapper. Dieser erlaubt das Erstellen des Projektes und dessen Ausführung ohne dass Gradle vorher installiert werden muss. Damit kann das Projekt auf jedem Rechner erstellt werden, auf dem eine Java-SDK installiert ist. Das Skript 3a wird auf Linux und macOS verwendet. Entwickler auf Windows nutzen die Datei mit der Endung .bat (3b). Über den Wrapper wird das Builden des Codes auch angestossen:
+----
+macOS / Linux:
+./gradlew build
+
+Windows
+./gradlew.bat build
+----
+
+Probieren Sie es aus. Wir haben zwar noch keine Sourcedateien angelegt; das Erstellen des Projekts funktioniert aber bereits. Nach dem Ausführen des oben genannten Befehls sollte in etwa die folgende Ausgabe auf dem Bildschirm erscheinen:
+----
+> Task :buildEnvironment
+
+------------------------------------------------------------
+Root project 'temp'
+------------------------------------------------------------
+
+classpath
+No dependencies
+
+A web-based, searchable dependency report is available by adding the --scan option.
+
+BUILD SUCCESSFUL in 400ms
+1 actionable task: 1 executed
+----
+
+=== Tasks
+Mit der Ausführung von `+./gradlew build+` (Windows `+./gradlew.bat build+`) haben Sie einen sogenannten Task von Gradle ausgeführt. Tasks sind Anweisungen an Gradle, etwas Bestimmtes zu tun. Hier zum Beispiel das komplette Projekt zu erstellen. Da wir noch nicht definiert haben, dass wir ein Kotlin-Projekt erstellen wollen, wird natürlich auch keines erstellt. Trotzdem wird durch `+build+` eine Default-Anweisung ausgeführt. Diese werden wir später dann für unsere Zwecke anpassen.
+
+Im Basisprojekt sind bereits einige Aufgaben (Tasks) definiert, welche von Gradel ausgeführt werden können.
+Welche das sind, können Sie mit dem Befehl `+gradle tasks+` anzeigen lassen.
+
+----
+Build Setup tasks
+-----------------
+init - Initializes a new Gradle build.
+wrapper - Generates Gradle wrapper files.
+
+Help tasks
+----------
+buildEnvironment - Displays all buildscript dependencies declared in root project 'temp'.
+dependencies - Displays all dependencies declared in root project 'temp'.
+dependencyInsight - Displays the insight into a specific dependency in root project 'temp'.
+help - Displays a help message.
+javaToolchains - Displays the detected java toolchains.
+kotlinDslAccessorsReport - Prints the Kotlin code for accessing the currently available project extensions and conventions.
+outgoingVariants - Displays the outgoing variants of root project 'temp'.
+projects - Displays the sub-projects of root project 'temp'.
+properties - Displays the properties of root project 'temp'.
+resolvableConfigurations - Displays the configurations that can be resolved in root project 'temp'.
+tasks - Displays the tasks runnable from root project 'temp'.
+----
+
+Interessant kann der Task `+javaToolchains+` sein. Damit lässt sich anzeigen, welche Javaversionen auf dem System installiert sind. Bei meinem Rechner lautet die Ausgabe:
+----
+> Task :javaToolchains
+
+ + Options
+     | Auto-detection:     Enabled
+     | Auto-download:      Enabled
+
+ + Eclipse Temurin JDK 17.0.8.1+1
+     | Location:           /Users/andreas/.sdkman/candidates/java/17.0.8.1-tem
+     | Language Version:   17
+     | Vendor:             Eclipse Temurin
+     | Architecture:       aarch64
+     | Is JDK:             true
+     | Detected by:        SDKMAN!
+
+ + Eclipse Temurin JDK 21.0.1+12-LTS
+     | Location:           /Users/andreas/.sdkman/candidates/java/21.0.1-tem
+     | Language Version:   21
+     | Vendor:             Eclipse Temurin
+     | Architecture:       aarch64
+     | Is JDK:             true
+     | Detected by:        Current JVM
+
+
+BUILD SUCCESSFUL in 399ms
+1 actionable task: 1 executed
+----
+
+=== Plugins
+Sie erinnern sich: wir wollen Gradle einsetzen, um ein Kotlin-Projekt zu erstellen. Dazu müssen wir einiges definieren:
+
+1. Gradle muss wissen, dass wir mit Kotlin arbeiten
+2. Wir müssen angeben, welche Version von Kotlin wir verwenden wollen
+3. Es muss bekannt sein, wo die Source-Dateien zu finden sind
+4. Wenn wir externe Bibliotheken verwenden wollen, z.B. JavaFX, müssen wir diese ebenfalls dem Projekt hinzufügen
+5. Da wir unseren Code auch testen wollen, müssen wir definieren, welches Framework wir verwenden wollen und wo die Testdateien zu finden sind
+6. Schlussendlich müssen wir die Sourcedateien in Klassen kompilieren und alles in eine Jar-Datei packen.
+
+Gradle bietet zu diesem Zweck sogenannte *Plugins* an. Diese können Sie sich vorstellen wie kleine Unterprogramme, welche bestimmte Aufgaben übernehmen. Solche Aufgaben können zum Beispiel das Aufführen von Tests sein oder das Kompilieren von Code. Es sei hier nur erwähnt, dass Sie solche Plugins auch selber schreiben können. Damit lassen sich auch komplexeste Aufgaben mit Gradle lösen.
+
+Um ein Kotlin-Projekt zu erstellen, verwenden wir das Plugin `+kotlin+`. Dazu öffnen wir die Datei `+build.gradle.kts+`. Die Kommentarzeilen am Anfang können wir löschen. Dann fügen wir den folgenden Code ein:
+
+----
+plugins {
+    kotlin("jvm").version("1.9.20")
+}
+----
+Dies konfiguriert das Plugin so, dass der Code für die JVM erstellt wird und Kotlin 1.9.20 verwendet wird. Sollten Sie eine andere Version installiert haben, so müssen Sie diese entsprechend angeben.
+
+*Aufgabe*
+Durch das Hinzufügen des Kotlin-Plugins sind neue Tasks hinzugekommen. Finden Sie heraus, welche es sind.
+
+Als nächstes müssen wir die Abhängigkeiten angeben. Darunter versteht man externe Bibliotheken, welche wir zusätzlich benötigen. Das kann JavaFX sein oder Bibliotheken zum Zugriff auf Datenbanken. Im Moment haben wir keine solchen Abhängigkeiten. Jedoch benötigt Gradle zum Kompilieren unseres Codes ein paar Systembibliotheken. Diese findet es in einem zentralen Repository im Internet. Dieses findet sich unter der URL https://mvnrepository.com/repos/central. Die Entwickler von Gradle haben vorgesorgt. Wir können Gradle einfach mitteilen, wo es suchen soll. Dazu ergänzen wir die Datei `+build.gradle.kts+` wie folgt:
+----
+repositories {
+    mavenCentral()
+}
+----
+
+An dieser Stelle sollten wir uns um den Code kümmern. Das Plugin für Kotlin erwartet den Code an einer bestimmten Stelle, nämlich im Verzeichnis `+src/main/kotlin+`. Das ist eine Konvention, welche sich unter den Java- und Kotlinentwicklern durchgesetzt hat. Wenn wir unsere Sourcedateien dort ablegen, müssen wir nicht konfigurieren ("convention over configuration"); das Plugin findet sie und kompiliert sie. Als legen wir als nächstes dieses Verzeichnis an. Dort, wo unsere Build-Datei liegt, schreiben wir
+----
+mkdir -p src/main/kotlin
+----
+Wir wechseln in das Verzeichnis und legen dort die Datei `+Main.kt+` an. Das geht am besten über das IDE. Den Inhalt halten wir bewusst einfach:
+----
+fun main() {
+    println("Hallo Gradle!")
+}
+----
+
+Das Projektverzeichnis sieht nun so aus:
+----
+.
+├── build.gradle.kts
+├── gradle
+│   └── wrapper
+│       ├── gradle-wrapper.jar
+│       └── gradle-wrapper.properties
+├── gradlew
+├── gradlew.bat
+├── settings.gradle.kts
+├── src
+│   └── main
+│       └── kotlin
+│           └── Main.kt  <-- Die Sourcedatei
+├── testmanifest.txt
+└── tree.txt
+
+6 directories, 9 files
+----
+
+Das reicht schon aus, um unser Projekt zu erstellen. Dies geschieht wiederum mit
+----
+./gradlew build
+----
+
+Wenn alles geklappt hat, erscheint die Meldung
+----
+BUILD SUCCESSFUL in 585ms
+3 actionable tasks: 3 executed
+----
+
+Zusätzlich ist der Ordner `+build+` entstanden. Darin legt Gradle alle Dateien ab, welche beim Kompilieren entstehen. Dieser Ordner kann problemlos gelöscht werden, da dessen Inhalt mit Gradle jederzeit wieder erzeugt werden kann. Auch wird dieser Ordner nicht in ein Git-Repository aufgenommen. Das können Sie überprüfen, in dem Sie einen Blick in die Datei `+.gitignore+` werfen.
+
+Uns interessiert der Inhalt des Ordners `+build/libs+`. Dort liegt die ausführbare Jar-Datei unseres Projekt. Wenn sie dieses wie ich `+gradle-start+` genannt haben, dann liegt jetzt dort eine Datei mit dem Namen `+gradle-start.jar+`. Das ist das ausführbare Kotlin-Programm.
+
+----
+build
+├── classes
+│   └── kotlin
+│       └── main
+│           └── META-INF
+├── kotlin
+│   └── compileKotlin
+│       ├── cacheable
+│       │   └── caches-jvm
+│       │       ├── inputs
+│       │       ├── jvm
+│       │       │   └── kotlin
+│       │       └── lookups
+│       ├── classpath-snapshot
+│       └── local-state
+├── libs  <-- Hier liegt das Jar-File
+└── tmp
+    └── jar
+----
+
+Warten Sie noch mit dem Ausführen der Jar-Datei. Sie wird so nicht funktionieren. Wenn Sie sie starten mit
+----
+kotlin build/libs/gradle-start.jar
+----
+wird der Fehler erscheinen
+
+----
+error: no Main-Class entry found in manifest in build/libs/gradle-start.jar
+----
+Dies liegt daran, dass die JVM nicht weiss, was Sie ausführen soll. Es fehlt die Manifest-Datei, welche festelegt, wo das Hauptprogramm liegt. Diese Eigenart von Kotlin (und Java) nervt mich am meisten. Anderen geht es ebenso, daher können wir Gradle anweisen, diese Datei für uns zu erzeugen und ins Jar-File zu verpacken. Dazu fügen wir unserer Builddatei `+build.gradle.kts+` die folgenden Zeilen hinzu:
+----
+tasks.withType<Jar> {
+    manifest {
+        attributes["Main-Class"] = "ch.abbts.ndsswe.MainKt"
+    }
+}
+----
+
+=== Das vollständige Skript
+Die Datei `+build.gradle.kts+` sollte nun wie folgt aussehen.
+----
+
+plugins {
+    kotlin("jvm").version("1.9.20")
+}
+
+repositories {
+    mavenCentral()
+}
+
+tasks.withType<Jar> {
+    manifest {
+        attributes["Main-Class"] = "MainKt"
+    }
+}
+----
+
+Wir löschen das Verzeichnis `+build+` und erstellen das Projekt neu. Wir können das auf einer Zeile erledigen:
+----
+./gradlew clean build
+----
+
+Der Task `+clean+` löscht das gesamte Build-Verzeichnis bevor es mit `+build+` neu erstellt wird.
+
+Nun lässt sich unser Programm starten:
+----
+kotlin build/libs/gradle-start.jar
+----
+
+Auf dem Bildschirm sollte nun die Zeilen erscheinen
+----
+Hallo Gradle!
+----
+
+=== Den Inhalt der Jar-Datei überprüfen
+Dass alles korrekt verpackt wurde, können wir überprüfen, indem wir den Inhalt der Jar-Datei anzeigen:
+----
+jar tf build/libs/gradle-start.jar
+----
+
+In der Eingabeaufforderung erscheint die Ausgabe
+----
+META-INF/
+META-INF/MANIFEST.MF
+META-INF/gradle-start.kotlin_module
+MainKt.class
+----
+
+== Erstellen einer Applikation
+Mit dem bisher Erreichten können wir eine einfache Kotlin-Anwendung erstellen und unabhängig von der IDE ausführen. Wollen wir den Code testen, müssen wir zusätzliche Abhängigkeiten hinzufügen. Zudem müssen wir das korrekte Verzeichnis für den Sourcecode noch von Hand erzeugen. Abhilfe schafft das Plugin `+application+`. Dieses erweitert das Kotlin-Plugin vor allem um zwei neue Tasks.
+
+|===
+
+|`+assembleDist+` |Erzeugt die Jar-Datei und packt sie in ein Tar- und ein Zip File.
+
+|`+run+` | Erzeugt das Projekt und startet es
+|===
+
+Die Tar-Datei ist unter Linux eine beliebte Form, um mehrere Dateien zusammenzufassen. Die Zip-Datei kennen Sie. Diese funktioniert auf allen Systemen, wird aber vor allem für Windows und macOS eingesetzt. In den Dateien befindet sich alles Nötige, um den Code auszuführen. Das Hauptprogramm ist von den Bibliotheken getrennt. Dadurch lassen sich letztere einfacher Updaten. Für das Ausführen stehen Skripts zur Verfügung. Ein typisches Verzeichnis sieht wie folgt aus:
+----
+├── bin
+│   ├── app  <-- Damit lässt sich das Programm starten
+│   └── app.bat  <-- Dieses Skript ist für Windows
+└── lib
+    ├── annotations-13.0.jar
+    ├── app.jar  <-- Das ist unser Code
+    ├── checker-qual-3.33.0.jar
+    ├── error_prone_annotations-2.18.0.jar
+    ├── failureaccess-1.0.1.jar
+    ├── guava-32.1.1-jre.jar
+    ├── jsr305-3.0.2.jar
+    └── kotlin-stdlib-1.9.21.jar
+----
+
+Um die erwähnte Appliaktion zu erstellen genügt es, dem Build-Script das Plugin `+application+` hinzuzufügen. Noch einfacher geht es, wenn schon das Projekt als Applikation erzeugt wird. Dies erreicht man, wenn die Initialisierung erfolgt mit
+----
+./gradlew init --type kotlin-application
+----
+
+Beim Erzeugen wird man nach dem Namen des Source-Packages gefragt. Hier gibt man in der Regel den umgekehrten Domainnamen der Firma oder seiner Webseite ein. Also zum Beispiel `+com.example.ndsswe+`. Natürlich kann man auch andere Bezeichner wählen. Sie sollten darauf achten, keine Sonderzeichen, Zahlen und Bindestriche zu verwenden.
+
+Danach erzeugt Gradle ein erweitertes Projekverzeichnis:
+----
+.
+├── app
+│   ├── build.gradle.kts
+│   └── src
+│       ├── main
+│       │   ├── kotlin
+│       │   │   └── com
+│       │   │       └── example
+│       │   │           └── ndsswe
+│       │   │               └── App.kt
+│       │   └── resources
+│       └── test
+│           ├── kotlin
+│           │   └── com
+│           │       └── example
+│           │           └── ndsswe
+│           │               └── AppTest.kt
+│           └── resources
+├── gradle
+│   └── wrapper
+│       ├── gradle-wrapper.jar
+│       └── gradle-wrapper.properties
+├── gradlew
+├── gradlew.bat
+└── settings.gradle.kts
+----
+
+Neu gegenüber dem Basisprojekt ist, dass die Sourceodes nun in einem Ordner `+app+` untergebracht sind. Wir erkennen, dass aus dem angegebenen Sourcepackagename weitere Unterorder wurden. Zudem ist der neue Ordner `+test+` hinzugekommen. Dort werden die Testdateien gespeichert. Man erkennt, dass auch jeweils zwei Beispieldateien angelegt wurden: `+App.kt+` und `+AppTest.kt+`.
+
+Sowohl für die Tests als auch für das eigentliche Programm können weitere Ressourcen (Bilder usw.) in den Verzeichnissen `+resources+` gespeichert werden. Sie finden dann automatisch den Weg in die fertige Appliaktion.
+
+=== Die Datei build.gradle.kts
+Ein Blick in die Builddatei zeigt, dass das Erzeugen einer Applikation komplizierter geworden ist:
+----
+plugins {
+    // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
+    id("org.jetbrains.kotlin.jvm") version "1.9.10"
+
+    // Apply the application plugin to add support for building a CLI application in Java.
+    application
+}
+
+repositories {
+    // Use Maven Central for resolving dependencies.
+    mavenCentral()
+}
+
+dependencies {
+    // Use the Kotlin JUnit 5 integration.
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
+
+    // Use the JUnit 5 integration.
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.9.3")
+
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+    // This dependency is used by the application.
+    implementation("com.google.guava:guava:32.1.1-jre")
+}
+
+// Apply a specific Java toolchain to ease working on different environments.
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
+    }
+}
+
+application {
+    // Define the main class for the application.
+    mainClass.set("com.example.ndsswe.AppKt")
+}
+
+tasks.named<Test>("test") {
+    // Use JUnit Platform for unit tests.
+    useJUnitPlatform()
+}
+----
+
+Trotzdem bleibt es für uns einfach. Die Sourcefiles kommen in das Verzeichnis `+app/src/main/kotlin+`, die Dateien mit den Unittests in `+app/src/test/kotlin+`. Allfällige Bilder, Texte, Icons oder ähnliches werden in den beiden Ordnern `+resources+` abgelegt.
+
+Das Projekt erzeugt man wie gewohnt mit
+----
+./gradlew build
+----
+Dabei werden auch gleichzeitig die Unittests ausgeführt. Nur wenn diese erfolgreich sind, wird das Projekt erstellt. Will man nur die Tests ausführen, kann man dies mit `+./gradlew test+` erreichen.
+
+Haben Sie alles zusammen und wollen die Software Ihrem Dozenten zur Beurteilung einreichen, können Sie alles zusammen in eine Zip-Datei packen. Dies geschieht wie oben erwähnt mit
+----
+./gradlew distZip
+----
+
