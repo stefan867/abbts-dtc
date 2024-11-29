@@ -12,6 +12,7 @@ import kotlin.random.Random
 val spells = listOf("Nutze den Tag.", "Heute ist ein toller Tag.")
 
 // Todo: Hier die Liste mit den Glückssymbolen einfügen
+val symbole = listOf("!","@","*","#","+")
 
 fun main() {
     val random = Random
