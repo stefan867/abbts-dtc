@@ -14,26 +14,30 @@ fun main() {
     // Todo: Den Spieler nach dem Namen fragen
     print("Gib deinen Namen ein: ")
     var player1 = readln()
-    var player2 = "computer"
+    var player2 = "Computer"
     var punktePlayer1 = 0
     var punktePlayer2 = 0
 
     // Todo: Solange spielen bis Spieler abbricht
     do {
-        val die = Random
-        val player1Score = die.nextInt(1..6)
-        val player2Score = die.nextInt(1..6)
-        println("$player1 würfelt: $player1Score  --  $player2 würfelt: $player2Score")
-        when {
-            player1Score > player2Score -> {
-                println("$player1 gewinnt")
-                punktePlayer1 ++
+        for (counter in 1..10){
+            val die = Random
+            val player1Score = die.nextInt(1..6)
+            val player2Score = die.nextInt(1..6)
+            println("$player1 würfelt: $player1Score  --  $player2 würfelt: $player2Score")
+            when {
+                player1Score > player2Score -> {
+                    println("$player1 gewinnt")
+                    punktePlayer1++
+                }
+
+                player1Score < player2Score -> {
+                    println("$player2 gewinnt")
+                    punktePlayer2++
+                }
+
+                else -> println("Unentschieden")
             }
-            player1Score < player2Score -> {
-                println("$player2 gewinnt")
-                punktePlayer2 ++
-            }
-            else -> println("Unentschieden")
         }
         print("Wollen Sie das Spiel beenden? j/n ")
         var abbruch = readln()
