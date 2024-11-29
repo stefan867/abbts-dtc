@@ -25,4 +25,6 @@ fun main() {
     println("Dein Glückssymbol heute: ${symbole[index2]}")
 
     // Todo: Hier die Glückszahl berechnen und ausgeben
+    val glueckszahl = (index1 + index2)
+    println("Dein Glückszahl heute: $glueckszahl")
 }
