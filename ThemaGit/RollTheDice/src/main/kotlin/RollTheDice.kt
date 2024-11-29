@@ -1,4 +1,5 @@
 import kotlin.random.Random
+import kotlin.random.nextInt
 
 /**
  * Simuliert ein einfaches Würfelspiel zwischen dem
@@ -10,20 +11,34 @@ import kotlin.random.Random
 
 fun main() {
 
-    val die = Random
-
-    val playerScore = die.nextInt(7)
-    val computerScore = die.nextInt(7)
-
-    // Todo: Den Fehler im Programm finden und beheben
     // Todo: Den Spieler nach dem Namen fragen
-    // Todo: Solange spielen bis Spieler abbricht
-    // Todo: Ausgeben, wer mehr Runden gewonnen hat
+    print("Gib deinen Namen ein: ")
+    var player1 = readln()
+    var player2 = "computer"
+    var punktePlayer1 = 0
+    var punktePlayer2 = 0
 
-    println("Du würfelst: $playerScore  --  Computer würfelt: $computerScore")
-    when {
-        playerScore > computerScore -> println("Du gewinnst")
-        playerScore < computerScore -> println("Der Computer gewinnt")
-        else -> println("Unentschieden")
-    }
+    // Todo: Solange spielen bis Spieler abbricht
+    do {
+        val die = Random
+        val player1Score = die.nextInt(1..6)
+        val player2Score = die.nextInt(1..6)
+        println("$player1 würfelt: $player1Score  --  $player2 würfelt: $player2Score")
+        when {
+            player1Score > player2Score -> {
+                println("$player1 gewinnt")
+                punktePlayer1 ++
+            }
+            player1Score < player2Score -> {
+                println("$player2 gewinnt")
+                punktePlayer2 ++
+            }
+            else -> println("Unentschieden")
+        }
+        print("Wollen Sie das Spiel beenden? j/n ")
+        var abbruch = readln()
+    } while (abbruch != "j")
+
+    // Todo: Ausgeben, wer mehr Runden gewonnen hat
+    println("Spielstand: $player1 $punktePlayer1 : $player2 $punktePlayer2")
 }
