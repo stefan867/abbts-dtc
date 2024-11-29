@@ -15,11 +15,14 @@ val spells = listOf("Nutze den Tag.", "Heute ist ein toller Tag.")
 val symbole = listOf("!","@","*","#","+")
 
 fun main() {
-    val random = Random
-    val index = random.nextInt(spells.size)
-    println("Dein Leitspruch heute: ${spells[index]}")
+    val random1 = Random
+    val index1 = random1.nextInt(spells.size)
+    println("Dein Leitspruch heute: ${spells[index1]}")
 
     // Todo: Hier das Glückssymbol ausgeben
+    val random2 = Random
+    val index2 = random2.nextInt(symbole.size)
+    println("Dein Glückssymbol heute: ${symbole[index2]}")
 
     // Todo: Hier die Glückszahl berechnen und ausgeben
 }
